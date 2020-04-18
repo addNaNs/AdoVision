@@ -1,24 +1,53 @@
 import os
+import pathlib
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import seaborn as sns
 import tensorflow as tf
+from keras_preprocessing.image import ImageDataGenerator
 
-digit_dirs = [os.path.join('../data/japanesehandwrittendigits/0'+ str(i)) for i in range(10)]
+digits_dirs = [os.path.join('../data/japanese_handwritten_digits/Japanese Handwritten Digits/train/0'
+                            + str(i)) for i in range(10)]
 
-print('total_images = ' + str(len(os.listdir(digit_dirs[0]))))
+[print('total ' + str(i) + ' images:', len(os.listdir(digits_dirs[i]))) for i in range(10)]
+digits_files = [os.listdir(d) for d in digits_dirs]
 
-digit_files = [os.listdir(digit_dirs[i]) for i in range(10)]
-print(digit_files[0][:10])
+TRAINING_DIR = "../data/japanese_handwritten_digits/Japanese Handwritten Digits/train"
+training_data_gen = ImageDataGenerator(rescale=1. / 255, fill_mode='nearest')
 
+VALIDATION_DIR = "../data/japanese_handwritten_digits/Japanese Handwritten Digits/validation"
+validation_data_gen = ImageDataGenerator(rescale=1. / 255)
 
-want_to_print = False
-if want_to_print:
-    for i, img_path in enumerate([os.path.join(digit_dirs[6], f_name) for f_name in digit_files[6][0:5]]):
-        print(img_path)
-        img = mpimg.imread(img_path)
-        plt.imshow(img)
-        plt.axis('Off')
-        plt.show()
+train_generator = training_data_gen.flow_from_directory(
+    TRAINING_DIR,
+    target_size=(28, 28),
+    color_mode='grayscale',
+    class_mode='categorical'
+)
+
+validation_generator = validation_data_gen.flow_from_directory(
+    VALIDATION_DIR,
+    target_size=(28, 28),
+    color_mode='grayscale',
+    class_mode='categorical'
+)
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    tf.keras.layers.Conv2D(16, (3, 3), activation='relu'),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+model.summary()
+
+print(train_generator)
+
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+
+history = model.fit(train_generator, epochs=10, validation_data=validation_generator, verbose=1)
+
+model.save("jhd_weights.h5")
