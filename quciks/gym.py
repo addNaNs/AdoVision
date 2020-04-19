@@ -18,21 +18,15 @@ class Gym:
     last_trained_his = None
     past_models = []
 
-    def __init__(self, train_dir, validation_dir):
+    def __init__(self, train_dir, validation_dir, **kwargs):
         self.TRAINING_DIR = train_dir
         self.VALIDATION_DIR = validation_dir
 
         training_data_gen = ImageDataGenerator(rescale=1. / 255, fill_mode='nearest')
         validation_data_gen = ImageDataGenerator(rescale=1. / 255)
 
-        self.train_gen = training_data_gen.flow_from_directory(self.TRAINING_DIR,
-                                                               target_size=(28, 28),
-                                                               color_mode='grayscale',
-                                                               class_mode='categorical')
-        self.validation_gen = validation_data_gen.flow_from_directory(self.VALIDATION_DIR,
-                                                                      target_size=(28, 28),
-                                                                      color_mode='grayscale',
-                                                                      class_mode='categorical')
+        self.train_gen = training_data_gen.flow_from_directory(self.TRAINING_DIR, **kwargs)
+        self.validation_gen = validation_data_gen.flow_from_directory(self.VALIDATION_DIR, **kwargs)
 
     def get_model(self):
         return self.model
@@ -44,7 +38,7 @@ class Gym:
 
     def fit_model(self):
         self.last_trained_his = self.model.fit(self.train_gen,
-                                               epochs=10, validation_data=self.validation_gen, verbose=1)
+                                               epochs=1, validation_data=self.validation_gen, verbose=1)
 
     def get_last_history(self):
         return self.last_trained_his
@@ -53,11 +47,18 @@ class Gym:
         self.model.save(f_name)
         self.past_models.append((f_name, self.last_trained_his))
 
+    def get_past_models(self):
+        return self.past_models
+
+    def show_history(self):
+        for f_name, his in self.past_models:
+            print('"{}" - {}'.format(f_name, his.history))
+
 
 TRAINING_DIR = "../data/japanese_handwritten_digits/Japanese Handwritten Digits/train"
 VALIDATION_DIR = "../data/japanese_handwritten_digits/Japanese Handwritten Digits/validation"
 
-gym = Gym(TRAINING_DIR, VALIDATION_DIR)
+gym = Gym(TRAINING_DIR, VALIDATION_DIR, target_size=(28, 28), color_mode='grayscale', class_mode='categorical')
 
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
@@ -72,3 +73,4 @@ gym.set_model(model)
 gym.get_model().compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 gym.fit_model()
 gym.save_model('jhd_weights.h5')
+gym.show_history()
