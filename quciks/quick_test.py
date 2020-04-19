@@ -7,6 +7,11 @@ import seaborn as sns
 import tensorflow as tf
 from keras_preprocessing.image import ImageDataGenerator
 
+
+TRAINING_DIR = "../data/japanese_handwritten_digits/Japanese Handwritten Digits/train"
+VALIDATION_DIR = "../data/japanese_handwritten_digits/Japanese Handwritten Digits/validation"
+
+'''
 digits_dirs = [os.path.join('../data/japanese_handwritten_digits/Japanese Handwritten Digits/train/0'
                             + str(i)) for i in range(10)]
 
@@ -31,7 +36,10 @@ validation_generator = validation_data_gen.flow_from_directory(
     target_size=(28, 28),
     color_mode='grayscale',
     class_mode='categorical'
-)
+)'''
+
+import quciks.gym
+gym = quciks.gym.Gym(TRAINING_DIR, VALIDATION_DIR)
 
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
@@ -42,12 +50,8 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 
-model.summary()
+gym.set_model(model)
+gym.get_model().compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+gym.fit_model()
+gym.save_model('jhd_weights.h5')
 
-print(train_generator)
-
-model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-
-history = model.fit(train_generator, epochs=10, validation_data=validation_generator, verbose=1)
-
-model.save("jhd_weights.h5")
