@@ -65,66 +65,45 @@ models = list()
 
 models.append(tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-    tf.keras.layers.Conv2D(16, (3, 3), activation='relu'),
     tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
     tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax')
 ]))
 
 models.append(tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    tf.keras.layers.Dropout(0.1),
     tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.Dropout(0.1),
     tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    tf.keras.layers.Dropout(0.1),
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax')
 ]))
 
 models.append(tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.Conv2D(128, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    tf.keras.layers.Dropout(0.1),
     tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    tf.keras.layers.Dropout(0.1),
+    tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    tf.keras.layers.Dropout(0.1),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.Dropout(0.1),
+    tf.keras.layers.Conv2D(16, (3, 3), activation='relu'),
+    tf.keras.layers.Dropout(0.1),
     tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(10, activation='softmax')
-]))
-
-models.append(tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(16, (3, 3), activation='elu', input_shape=(28, 28, 1)),
-    tf.keras.layers.Conv2D(16, (3, 3), activation='elu'),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='elu'),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(64, activation='elu'),
-    tf.keras.layers.Dense(10, activation='softmax')
-]))
-
-models.append(tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(16, (3, 3), activation='elu', input_shape=(28, 28, 1)),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='elu'),
-    tf.keras.layers.Conv2D(64, (3, 3), activation='elu'),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation='elu'),
-    tf.keras.layers.Dense(10, activation='softmax')
-]))
-
-models.append(tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(32, (3, 3), activation='elu', input_shape=(28, 28, 1)),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='elu'),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='elu'),
-    tf.keras.layers.MaxPooling2D(),
-    tf.keras.layers.Conv2D(64, (3, 3), activation='elu'),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation='elu'),
+    tf.keras.layers.Dense(256, activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax')
 ]))
 
 
 for i, model in enumerate(models):
     gym.set_model(model)
-    gym.get_model().compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+    gym.get_model().compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     gym.fit_model()
     gym.save_model('jhd_weights' + str(i) + '.h5')
 
