@@ -22,7 +22,12 @@ class Gym:
         self.TRAINING_DIR = train_dir
         self.VALIDATION_DIR = validation_dir
 
-        training_data_gen = ImageDataGenerator(rescale=1. / 255, fill_mode='nearest')
+        training_data_gen = ImageDataGenerator(rescale=1. / 255,
+                                               fill_mode='nearest',
+                                               rotation_range=10,
+                                               zoom_range=0.1,
+                                               width_shift_range=0.1,
+                                               height_shift_range=0.1)
         validation_data_gen = ImageDataGenerator(rescale=1. / 255)
 
         self.train_gen = training_data_gen.flow_from_directory(self.TRAINING_DIR, **kwargs)
