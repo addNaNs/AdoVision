@@ -38,7 +38,7 @@ class Gym:
 
     def fit_model(self):
         self.last_trained_his = self.model.fit(self.train_gen,
-                                               epochs=1, validation_data=self.validation_gen, verbose=1)
+                                               epochs=25, validation_data=self.validation_gen, verbose=1)
 
     def get_last_history(self):
         return self.last_trained_his
@@ -60,17 +60,65 @@ VALIDATION_DIR = "../data/japanese_handwritten_digits/Japanese Handwritten Digit
 
 gym = Gym(TRAINING_DIR, VALIDATION_DIR, target_size=(28, 28), color_mode='grayscale', class_mode='categorical')
 
-model = tf.keras.models.Sequential([
+models = list()
+
+models.append(tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu'),
     tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax')
-])
+]))
 
-gym.set_model(model)
-gym.get_model().compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-gym.fit_model()
-gym.save_model('jhd_weights.h5')
+models.append(tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3, 3), activation='tanh', input_shape=(28, 28, 1)),
+    tf.keras.layers.Conv2D(16, (3, 3), activation='tanh'),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='tanh'),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation='tanh'),
+    tf.keras.layers.Dense(10, activation='softmax')
+]))
+
+models.append(tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+]))
+
+models.append(tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3, 3), activation='tanh', input_shape=(28, 28, 1)),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='tanh'),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation='tanh'),
+    tf.keras.layers.Dense(10, activation='softmax')
+]))
+
+models.append(tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+]))
+
+models.append(tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3, 3), activation='tanh', input_shape=(28, 28, 1)),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='tanh'),
+    tf.keras.layers.Conv2D(64, (3, 3), activation='tanh'),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='tanh'),
+    tf.keras.layers.Dense(10, activation='softmax')
+]))
+
+
+for i, model in enumerate(models):
+    gym.set_model(model)
+    gym.get_model().compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    gym.fit_model()
+    gym.save_model('jhd_weights' + str(i) + '.h5')
+
 gym.show_history()
