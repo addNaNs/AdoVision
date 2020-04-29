@@ -38,8 +38,8 @@ validation_generator = validation_data_gen.flow_from_directory(
     class_mode='categorical'
 )'''
 
-import quciks.gym
-gym = quciks.gym.Gym(TRAINING_DIR, VALIDATION_DIR)
+import quick_tests.gym
+gym = quick_tests.gym.Gym(TRAINING_DIR, VALIDATION_DIR)
 
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
