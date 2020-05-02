@@ -14,19 +14,20 @@ if __name__ == '__main__':
                                                       color_mode='grayscale', class_mode='categorical')
 
     model = tf.keras.models.Sequential([
-            tf.keras.layers.Conv2D(128, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-            tf.keras.layers.Dropout(0.1),
-            tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-            tf.keras.layers.Dropout(0.1),
-            tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-            tf.keras.layers.Dropout(0.1),
-            tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-            tf.keras.layers.Dropout(0.1),
-            tf.keras.layers.Conv2D(16, (3, 3), activation='relu'),
-            tf.keras.layers.Dropout(0.1),
-            tf.keras.layers.Flatten(),
-            tf.keras.layers.Dense(256, activation='relu'),
-            tf.keras.layers.Dense(10, activation='softmax')
+           tf.keras.layers.Conv2D(128, (3, 3), activation='relu',
+                                  input_shape=(28, 28, 1), padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Flatten(),
+           tf.keras.layers.Dense(256, activation='relu'),
+           tf.keras.layers.Dense(10, activation='softmax')
         ])
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.fit(train_gen, epochs=20, verbose=1, callbacks=[tf.keras.callbacks.EarlyStopping(patience=3)])

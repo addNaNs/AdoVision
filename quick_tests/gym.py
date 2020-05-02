@@ -87,43 +87,77 @@ if __name__ == '__main__':
     gym = Gym(TRAINING_DIR, VALIDATION_DIR, target_size=(28, 28), color_mode='grayscale', class_mode='categorical')
 
     models = list()
-
+    '''
     models.append(tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same', input_shape=(28, 28, 1)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dense(10, activation='softmax')
     ]))
 
     models.append(tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same', input_shape=(28, 28, 1)),
         tf.keras.layers.Dropout(0.1),
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.Dropout(0.1),
-        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.Dropout(0.1),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dense(10, activation='softmax')
+    ]))'''
+
+    models.append(tf.keras.models.Sequential([
+           tf.keras.layers.Conv2D(128, (3, 3), activation='relu',
+                                  input_shape=(28, 28, 1), padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same'),
+           tf.keras.layers.Dropout(0.1),
+           tf.keras.layers.Flatten(),
+           tf.keras.layers.Dense(256, activation='relu'),
+           tf.keras.layers.Dense(10, activation='softmax')
+        ]))
+    '''
+    models.append(tf.keras.models.Sequential([
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same', input_shape=(28, 28, 1)),
+        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(16, activation='relu'),
+        tf.keras.layers.Dense(10, activation='softmax')
     ]))
 
     models.append(tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(128, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-        tf.keras.layers.Dropout(0.1),
-        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-        tf.keras.layers.Dropout(0.1),
-        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-        tf.keras.layers.Dropout(0.1),
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-        tf.keras.layers.Dropout(0.1),
-        tf.keras.layers.Conv2D(16, (3, 3), activation='relu'),
-        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same', input_shape=(28, 28, 1)),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+        tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same'),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dense(10, activation='softmax')
     ]))
+    '''
 
 
 for i, model in enumerate(models):
