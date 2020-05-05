@@ -11,7 +11,7 @@ from keras_preprocessing.image import ImageDataGenerator
 
 model = tf.keras.models.load_model('jhd_weights.h5')
 
-path = '../data/single_test/01/test_number_1.jpg'
+path = input()
 img = keras_preprocessing.image.load_img(path, target_size=(28, 28), color_mode='grayscale')
 plt.imshow(img)
 plt.show()
