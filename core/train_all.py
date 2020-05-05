@@ -31,4 +31,3 @@ if __name__ == '__main__':
         ])
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.fit(train_gen, epochs=20, verbose=1, callbacks=[tf.keras.callbacks.EarlyStopping(patience=3)])
-    model.save('jhd_weights.h5')

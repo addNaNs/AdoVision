@@ -53,5 +53,5 @@ model = tf.keras.models.Sequential([
 gym.set_model(model)
 gym.get_model().compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 gym.fit_model()
-gym.save_model('jhd_weights.h5')
+
 
